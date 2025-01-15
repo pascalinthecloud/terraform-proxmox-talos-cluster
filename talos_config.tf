@@ -37,7 +37,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       hostname     = each.value.hostname
       install_disk = var.install_disk
     }),
-    file("${path.module}/files/cp-scheduling.yaml"),
+    file("${path.module}/templates/cp-scheduling.yaml"),
   ]
 }
 
