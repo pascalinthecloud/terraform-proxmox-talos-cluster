@@ -13,7 +13,7 @@ resource "talos_image_factory_schematic" "this" {
     {
       customization = {
         systemExtensions = {
-          officialExtensions = data.talos_image_factory_extensions_versions.this.extensions_info.*.name
+          officialExtensions = data.talos_image_factory_extensions_versions.this.extensions_info[*].name
         }
       }
     }
