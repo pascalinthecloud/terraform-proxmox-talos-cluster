@@ -90,6 +90,6 @@ data "talos_cluster_health" "this" {
   endpoints            = data.talos_client_configuration.this.endpoints
 
   timeouts = {
-    read = "5m"
+    read = "10m"
   }
 }
