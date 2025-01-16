@@ -7,9 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.WRITE_PAT }}
-        ref: ${{ github.event.pull_request.head.ref }}
+      ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Render terraform docs inside the README.md and push changes back to PR branch
       uses: terraform-docs/gh-actions@v1.3.0
@@ -19,3 +17,4 @@ jobs:
         output-file: README.md
         output-method: inject
         git-push: "true"
+        git-commit-message: "docs: update terraform docs [skip ci]"
