@@ -4,7 +4,7 @@ resource "talos_machine_secrets" "this" {}
 # Talos machine configuration for controlplane nodes
 data "talos_machine_configuration" "controlplane" {
   cluster_name     = var.cluster_name
-  cluster_endpoint = "https:#${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
+  cluster_endpoint = "https://${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
   machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -12,7 +12,7 @@ data "talos_machine_configuration" "controlplane" {
 # Talos machine configuration for worker nodes
 data "talos_machine_configuration" "worker" {
   cluster_name     = var.cluster_name
-  cluster_endpoint = "https:#${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
+  cluster_endpoint = "https://${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
   machine_type     = "worker"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }

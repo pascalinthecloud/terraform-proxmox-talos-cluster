@@ -25,7 +25,7 @@ variable "image" {
   type = object({
     version           = string
     extensions        = list(string)
-    factory_url       = optional(string, "https:#factory.talos.dev")
+    factory_url       = optional(string, "https://factory.talos.dev")
     arch              = optional(string, "amd64")
     platform          = optional(string, "nocloud")
     proxmox_datastore = optional(string, "local")
