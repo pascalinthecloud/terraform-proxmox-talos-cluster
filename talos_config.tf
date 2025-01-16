@@ -77,6 +77,7 @@ resource "talos_cluster_kubeconfig" "this" {
 
 # Waits for the Talos cluster to be ready /talos_cluster_health)
 data "talos_cluster_health" "this" {
+  # tflint-ignore: terraform_unused_declarations
   depends_on = [
     talos_machine_bootstrap.this,
     talos_machine_configuration_apply.worker,
