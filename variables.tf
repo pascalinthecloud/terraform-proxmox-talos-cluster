@@ -33,7 +33,7 @@ variable "image" {
 }
 
 variable "install_disk" {
-  description = "Install disk for talos"
+  description = "Install disk for Talos"
   type        = string
   default     = "/dev/sda"
 }
