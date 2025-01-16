@@ -24,7 +24,7 @@ variable "image" {
   description = "Variable to define the image configuration for Talos machines"
   type = object({
     version           = string
-    schematic_id      = string
+    extensions        = list(string)
     factory_url       = optional(string, "https://factory.talos.dev")
     arch              = optional(string, "amd64")
     platform          = optional(string, "nocloud")

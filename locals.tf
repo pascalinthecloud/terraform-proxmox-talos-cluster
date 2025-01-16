@@ -1,4 +1,4 @@
-// Define local variables for controlplane and worker nodes configuration
+# Define local variables for controlplane and worker nodes configuration
 locals {
   controlplanes = {
     for i in range(var.controlplane.count) : format("%s-controlplane-%02d", var.cluster_name, i + 1) => {
