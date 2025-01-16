@@ -45,7 +45,7 @@ No modules.
 | <a name="input_controlplane"></a> [controlplane](#input\_controlplane) | Specification of controlplane nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>  })</pre> | n/a | yes |
 | <a name="input_datastore"></a> [datastore](#input\_datastore) | Proxmox datastore ID | `string` | n/a | yes |
 | <a name="input_image"></a> [image](#input\_image) | Variable to define the image configuration for Talos machines | <pre>object({<br/>    version           = string<br/>    extensions        = list(string)<br/>    factory_url       = optional(string, "https://factory.talos.dev")<br/>    arch              = optional(string, "amd64")<br/>    platform          = optional(string, "nocloud")<br/>    proxmox_datastore = optional(string, "local")<br/>  })</pre> | n/a | yes |
-| <a name="input_install_disk"></a> [install\_disk](#input\_install\_disk) | Install disk for talos | `string` | `"/dev/sda"` | no |
+| <a name="input_install_disk"></a> [install\_disk](#input\_install\_disk) | Install disk for Talos | `string` | `"/dev/sda"` | no |
 | <a name="input_network"></a> [network](#input\_network) | Network configuration for nodes | <pre>object({<br/>    cidr        = string<br/>    gateway     = string<br/>    dns_servers = list(string)<br/>    vlan_id     = optional(number, null)<br/>  })</pre> | n/a | yes |
 | <a name="input_node"></a> [node](#input\_node) | Proxmox node name for VM deployment | `string` | n/a | yes |
 | <a name="input_vm_base_id"></a> [vm\_base\_id](#input\_vm\_base\_id) | The first VM ID for Proxmox VMs, with subsequent IDs counted up from it | `number` | n/a | yes |
