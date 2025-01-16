@@ -42,3 +42,9 @@ module "k8s_cluster" {
 }
 
 ```
+## Get kubeconfig and talosconfig
+
+```bash
+terraform output kubeconfig > cluster.kubeconfig 
+terraform output talosconfig > cluster.talosconfig
+```
