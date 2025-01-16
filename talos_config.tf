@@ -62,8 +62,8 @@ resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address")
-  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address")
+  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
+  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
 }
 
 # Retrieve the Kubernetes kubeconfig
@@ -71,6 +71,6 @@ resource "talos_cluster_kubeconfig" "this" {
   depends_on = [talos_machine_bootstrap.this]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address")
-  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address")
+  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
+  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
 }
