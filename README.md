@@ -11,8 +11,8 @@ module "k8s_cluster" {
   node         = "pve01"
 
   image = {
-    version      = "v1.9.1"
-    schematic_id = "88d1f7a5c4f1d3aba7df787c448c1d3d008ed29cfb34af53fa0df4336a56040b"
+    version    = "v1.9.1"
+    extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
   network = {
