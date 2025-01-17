@@ -1,0 +1,32 @@
+formatter: "markdown table"
+
+sort:
+  enable: true
+  by: required
+
+sections:
+  show:
+  - inputs
+  - outputs
+  - providers
+  - requirements
+
+content: |-
+  {{ include "examples/main.description" }}
+
+  ## Example
+
+  ```hcl
+  {{ include "examples/main.example" }}
+  ```
+
+  {{ .Providers }}
+
+  {{ .Requirements }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+output:
+  file: "README.md"

@@ -1,0 +1,37 @@
+module "k8s_cluster" {
+  source       = "../modules/k8s_cluster"
+  vm_base_id   = 700
+  cluster_name = "homelab.cluster"
+  datastore    = "local-lvm"
+  node         = "pve01"
+
+  image = {
+    version    = "v1.9.1"
+    extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
+  }
+
+  network = {
+    cidr        = "10.10.100.0/24"
+    gateway     = "10.10.100.1"
+    dns_servers = ["10.0.10.1", "1.1.1.1"]
+    vlan_id     = 1100
+  }
+
+  controlplane = {
+    count = 1
+    specs = {
+      cpu    = 2
+      memory = 4096
+      disk   = 50
+    }
+  }
+
+  worker = {
+    count = 2
+    specs = {
+      cpu    = 2
+      memory = 6192
+      disk   = 50
+    }
+  }
+}
