@@ -3,16 +3,18 @@ resource "talos_machine_secrets" "this" {}
 
 # Talos machine configuration for controlplane nodes
 data "talos_machine_configuration" "controlplane" {
-  cluster_name     = var.cluster_name
-  cluster_endpoint = "https://${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
+  cluster_name = var.cluster_name
+
+  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443" 
   machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
 
 # Talos machine configuration for worker nodes
 data "talos_machine_configuration" "worker" {
-  cluster_name     = var.cluster_name
-  cluster_endpoint = "https://${cidrhost(var.network.cidr, 10)}:6443" #cidrhost(x, 10) equals first controlplane
+  cluster_name = var.cluster_name
+
+  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443" 
   machine_type     = "worker"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -62,8 +64,8 @@ resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
-  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
+  node                 = local.controlplanes[0].ip_address
+  endpoint             = local.controlplanes[0].ip_address
 }
 
 # Retrieve the Kubernetes kubeconfig
@@ -71,8 +73,8 @@ resource "talos_cluster_kubeconfig" "this" {
   depends_on = [talos_machine_bootstrap.this]
 
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
-  endpoint             = lookup(local.controlplanes[keys(local.controlplanes)[0]], "ip_address", null)
+  node                 = local.controlplanes[0].ip_address
+  endpoint             = local.controlplanes[0].ip_address
 }
 
 # Waits for the Talos cluster to be ready /talos_cluster_health)
