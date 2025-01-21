@@ -59,7 +59,4 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
       }
     }
   }
-  lifecycle {
-    ignore_changes = [disk.file_id]
-  }
 }
