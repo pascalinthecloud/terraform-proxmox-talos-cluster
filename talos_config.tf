@@ -5,7 +5,7 @@ resource "talos_machine_secrets" "this" {}
 data "talos_machine_configuration" "controlplane" {
   cluster_name = var.cluster_name
 
-  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443" 
+  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443"
   machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -14,7 +14,7 @@ data "talos_machine_configuration" "controlplane" {
 data "talos_machine_configuration" "worker" {
   cluster_name = var.cluster_name
 
-  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443" 
+  cluster_endpoint = "https://${local.controlplanes[0].ip_address}:6443"
   machine_type     = "worker"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -34,13 +34,15 @@ resource "talos_machine_configuration_apply" "controlplane" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   node                        = each.value.ip_address
-  config_patches = [
+  config_patches = concat([
     templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
       hostname     = each.value.hostname
       install_disk = var.install_disk
     }),
     file("${path.module}/templates/cp-scheduling.yaml"),
-  ]
+    ],
+    var.config_patches
+  )
 }
 
 # Apply Talos machine configuration to worker VMs
@@ -51,12 +53,13 @@ resource "talos_machine_configuration_apply" "worker" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   node                        = each.value.ip_address
-  config_patches = [
+  config_patches = concat([
     templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
       hostname     = each.value.hostname
       install_disk = var.install_disk
-    })
-  ]
+    })],
+    var.config_patches
+  )
 }
 
 # Bootstrap Talos on the first controlplane node to initialize the Talos cluster

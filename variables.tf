@@ -1,3 +1,7 @@
+variable "config_patches" {
+  description = "List of configuration patches to apply to the Talos machine configuration"
+  type        = list(string)
+}
 variable "cluster_name" {
   description = "Name of the Kubernetes cluster"
   type        = string
