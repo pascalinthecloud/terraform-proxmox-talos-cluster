@@ -59,4 +59,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [disk.file_id]
+  }
 }
