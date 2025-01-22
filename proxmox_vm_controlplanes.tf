@@ -1,7 +1,7 @@
 resource "proxmox_virtual_environment_vm" "controlplane" {
   for_each = local.controlplanes
 
-  node_name     = each.value.node_name
+  node_name     = each.value.node
   name          = each.key
   description   = "controlplane"
   vm_id         = each.value.vm_id
@@ -36,7 +36,7 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     ssd          = true
     file_format  = "raw"
     size         = each.value.disk
-    file_id      = proxmox_virtual_environment_download_file.this.id
+    file_id      = proxmox_virtual_environment_download_file.this[each.value.node].id
   }
 
   boot_order = ["scsi0"]

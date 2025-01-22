@@ -1,6 +1,10 @@
 variable "cluster_name" {
   description = "Name of the Kubernetes cluster"
   type        = string
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster_name))
+    error_message = "The cluster_name must only contain letters, numbers, and dashes (-)."
+  }
 }
 
 variable "controlplane" {
@@ -12,6 +16,18 @@ variable "controlplane" {
       memory = number
       disk   = number
     })
+    overrides = optional(map(object({
+      node   = optional(string, null)
+      cpu    = optional(number, null)
+      memory = optional(number, null)
+      disk   = optional(number, null)
+      network = optional(object({
+        ip_address = string
+        cidr       = string
+        gateway    = string
+        vlan_id    = optional(number, null)
+      }), null)
+    })), {})
   })
 }
 
@@ -67,5 +83,18 @@ variable "worker" {
       memory = number
       disk   = number
     })
+    overrides = optional(map(object({
+      node   = optional(string, null)
+      cpu    = optional(number, null)
+      memory = optional(number, null)
+      disk   = optional(number, null)
+      network = optional(object({
+        ip_address = string
+        cidr       = string
+        gateway    = string
+        vlan_id    = optional(number, null)
+      }), null)
+    })), {})
   })
 }
+
