@@ -62,7 +62,8 @@ resource "talos_machine_configuration_apply" "worker" {
 # Bootstrap Talos on the first controlplane node to initialize the Talos cluster
 resource "talos_machine_bootstrap" "this" {
   depends_on = [talos_machine_configuration_apply.controlplane]
-  
+
+  client_configuration = talos_machine_secrets.this.client_configuration
   node                 = local.controlplanes[keys(local.controlplanes)[0]].ip_address
   endpoint             = local.controlplanes[keys(local.controlplanes)[0]].ip_address
 
