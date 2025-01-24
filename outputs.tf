@@ -7,7 +7,7 @@ output "kubeconfig" {
   value = {
     client_key  = talos_cluster_kubeconfig.this.client_key
     client_cert = talos_cluster_kubeconfig.this.client_certificate
-    ca_certificate = talos_cluster_kubeconfig.this.ca_certificate
+    ca_cert = talos_cluster_kubeconfig.this.ca_certificate
     host        = talos_cluster_kubeconfig.this.host
     kubeconfig  = talos_cluster_kubeconfig.this.kubeconfig_raw
   }
