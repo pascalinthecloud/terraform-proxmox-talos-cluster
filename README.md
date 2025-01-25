@@ -78,5 +78,6 @@ module "k8s_cluster" {
 | Name | Description |
 |------|-------------|
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | n/a |
+| <a name="output_talos_cluster_health"></a> [talos\_cluster\_health](#output\_talos\_cluster\_health) | n/a |
 | <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | n/a |
 <!-- END_TF_DOCS -->
