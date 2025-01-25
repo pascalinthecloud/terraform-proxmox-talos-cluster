@@ -14,4 +14,6 @@ output "kubeconfig" {
   sensitive = true
 }
 
-
+output "talos_cluster_health" {
+  value = data.talos_cluster_health.this
+}
