@@ -7,11 +7,14 @@ Terraform module to provision a Kubernetes cluster on Proxmox using Talos Linux.
 ```hcl
 module "k8s_cluster" {
   source       = "../modules/k8s_cluster"
-  vm_base_id   = 700
-  cluster_name = "homelab.cluster"
-  datastore    = "local-lvm"
-  node         = "pve01"
-
+  
+  cluster = {
+    vm_base_id   = 700
+    cluster_name = "homelab.cluster"
+    datastore    = "local-lvm"
+    node         = "pve01"
+  }
+ 
   image = {
     version    = "v1.9.1"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
