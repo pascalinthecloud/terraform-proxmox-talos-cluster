@@ -13,17 +13,22 @@ locals {
   ]
 
   # Combine and deduplicate all nodes 
-  nodes = setunion(local.controlplane_nodes, local.worker_nodes, toset([var.node]))
+  nodes = setunion(local.controlplane_nodes, local.worker_nodes, toset([var.cluster.node]))
 
 
   controlplanes = {
     for i in range(var.controlplane.count) : format("controlplane-%s", i + 1) => {
-      hostname = format("%s-controlplane-%02d", var.cluster_name, i + 1)
-      vm_id    = var.vm_base_id + i
+      hostname = format("%s-controlplane-%02d", var.cluster.name, i + 1)
+      vm_id    = var.cluster.vm_base_id + i
 
       node = coalesce(
         try(var.controlplane.overrides[format("controlplane-%s", i + 1)].node, null),
-        var.node
+        var.cluster.node
+      )
+
+      datastore = coalesce(
+        try(var.controlplane.overrides[format("controlplane-%s", i + 1)].datastore, null),
+        var.cluster.datastore
       )
       # Determine the IP address for the control plane node.
       # If an override is provided for the specific control plane node, use its IP address.
@@ -66,17 +71,27 @@ locals {
         try(var.controlplane.overrides[format("controlplane-%s", i + 1)].disk, null),
         var.controlplane.specs.disk
       )
+
+      install_disk = coalesce(
+        try(var.controlplane.overrides[format("controlplane-%s", i + 1)].install_disk, null),
+        var.cluster.install_disk
+      )
     }
   }
 
   workers = {
     for i in range(var.worker.count) : format("worker-%s", i + 1) => {
-      hostname = format("%s-worker-%02d", var.cluster_name, i + 1)
-      vm_id    = var.vm_base_id + var.controlplane.count + i
+      hostname = format("%s-worker-%02d", var.cluster.name, i + 1)
+      vm_id    = var.cluster.vm_base_id + var.controlplane.count + i
 
       node = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].node, null),
-        var.node
+        var.cluster.node
+      )
+
+      datastore = coalesce(
+        try(var.worker.overrides[format("worker-%s", i + 1)].datastore, null),
+        var.cluster.datastore
       )
 
       ip_address = coalesce(
@@ -102,6 +117,11 @@ locals {
       disk = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].disk, null),
         var.worker.specs.disk
+      )
+
+      install_disk = coalesce(
+        try(var.worker.overrides[format("worker-%s", i + 1)].install_disk, null),
+        var.cluster.install_disk
       )
     }
   }

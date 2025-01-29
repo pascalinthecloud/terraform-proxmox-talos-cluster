@@ -3,7 +3,7 @@ resource "talos_machine_secrets" "this" {}
 
 # Talos machine configuration for controlplane nodes
 data "talos_machine_configuration" "controlplane" {
-  cluster_name = var.cluster_name
+  cluster_name = var.cluster.name
 
   cluster_endpoint = "https://${local.controlplanes[keys(local.controlplanes)[0]].ip_address}:6443"
   machine_type     = "controlplane"
@@ -12,7 +12,7 @@ data "talos_machine_configuration" "controlplane" {
 
 # Talos machine configuration for worker nodes
 data "talos_machine_configuration" "worker" {
-  cluster_name = var.cluster_name
+  cluster_name = var.cluster.name
 
   cluster_endpoint = "https://${local.controlplanes[keys(local.controlplanes)[0]].ip_address}:6443"
   machine_type     = "worker"
@@ -21,7 +21,7 @@ data "talos_machine_configuration" "worker" {
 
 # Talos client configuration for the Kubernetes cluster
 data "talos_client_configuration" "this" {
-  cluster_name         = var.cluster_name
+  cluster_name         = var.cluster.name
   client_configuration = talos_machine_secrets.this.client_configuration
   endpoints            = [for _, controlplane in local.controlplanes : controlplane.ip_address]
 }
@@ -37,11 +37,11 @@ resource "talos_machine_configuration_apply" "controlplane" {
   config_patches = concat([
     templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
       hostname     = each.value.hostname
-      install_disk = var.install_disk
+      install_disk = each.value.install_disk
     }),
     file("${path.module}/templates/cp-scheduling.yaml"),
     ],
-    var.config_patches
+    var.cluster.config_patches
   )
 }
 
@@ -56,9 +56,9 @@ resource "talos_machine_configuration_apply" "worker" {
   config_patches = concat([
     templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
       hostname     = each.value.hostname
-      install_disk = var.install_disk
+      install_disk = each.value.install_disk
     })],
-    var.config_patches
+    var.cluster.config_patches
   )
 }
 

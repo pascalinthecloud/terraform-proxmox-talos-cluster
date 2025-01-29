@@ -1,12 +1,15 @@
-variable "config_patches" {
-  description = "List of configuration patches to apply to the Talos machine configuration"
-  type        = list(string)
-}
-variable "cluster_name" {
-  description = "Name of the Kubernetes cluster"
-  type        = string
+variable "cluster" {
+  description = "Cluster configuration"
+  type = object({
+    name           = string                       # The name of the cluster
+    config_patches = list(string)                 # List of configuration patches to apply to the Talos machine configuration
+    node           = string                       # Default node to deploy the vms on
+    datastore      = string                       # Default datastore to deploy the vms on
+    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
+    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on
+  })
   validation {
-    condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster_name))
+    condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster.name))
     error_message = "The cluster_name must only contain letters, numbers, and dashes (-)."
   }
 }
@@ -21,10 +24,12 @@ variable "controlplane" {
       disk   = number
     })
     overrides = optional(map(object({
-      node   = optional(string, null)
-      cpu    = optional(number, null)
-      memory = optional(number, null)
-      disk   = optional(number, null)
+      datastore    = optional(string, null)
+      node         = optional(string, null)
+      cpu          = optional(number, null)
+      memory       = optional(number, null)
+      disk         = optional(number, null)
+      install_disk = optional(string, null)
       network = optional(object({
         ip_address = string
         cidr       = string
@@ -33,11 +38,6 @@ variable "controlplane" {
       }), null)
     })), {})
   })
-}
-
-variable "datastore" {
-  description = "Proxmox datastore ID"
-  type        = string
 }
 
 variable "image" {
@@ -52,12 +52,6 @@ variable "image" {
   })
 }
 
-variable "install_disk" {
-  description = "Install disk for talos"
-  type        = string
-  default     = "/dev/sda"
-}
-
 variable "network" {
   description = "Network configuration for nodes"
   type = object({
@@ -66,16 +60,6 @@ variable "network" {
     dns_servers = list(string)
     vlan_id     = optional(number, null)
   })
-}
-
-variable "node" {
-  description = "Proxmox node name for VM deployment"
-  type        = string
-}
-
-variable "vm_base_id" {
-  description = "The first VM ID for Proxmox VMs, with subsequent IDs counted up from it"
-  type        = number
 }
 
 variable "worker" {
@@ -88,10 +72,12 @@ variable "worker" {
       disk   = number
     })
     overrides = optional(map(object({
-      node   = optional(string, null)
-      cpu    = optional(number, null)
-      memory = optional(number, null)
-      disk   = optional(number, null)
+      datastore    = optional(string, null)
+      node         = optional(string, null)
+      cpu          = optional(number, null)
+      memory       = optional(number, null)
+      disk         = optional(number, null)
+      install_disk = optional(string, null)
       network = optional(object({
         ip_address = string
         cidr       = string
