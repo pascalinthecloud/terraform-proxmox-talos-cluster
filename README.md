@@ -76,7 +76,7 @@ module "k8s_cluster" {
 
 | Name | Description |
 |------|-------------|
-| <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | n/a |
-| <a name="output_talos_cluster_health"></a> [talos\_cluster\_health](#output\_talos\_cluster\_health) | n/a |
-| <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | n/a |
+| <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | Kubernetes kubeconfig for the cluster |
+| <a name="output_talos_cluster_health"></a> [talos\_cluster\_health](#output\_talos\_cluster\_health) | Health status of the Talos cluster, can be used for other ressources to depend on |
+| <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | Talos configuration file for the cluster |
 <!-- END_TF_DOCS -->
