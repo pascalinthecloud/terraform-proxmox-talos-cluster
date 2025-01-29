@@ -28,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
   }
 
   disk {
-    datastore_id = var.datastore
+    datastore_id = each.value.datastore
     interface    = "scsi0"
     iothread     = true
     cache        = "writethrough"
@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
   }
 
   initialization {
-    datastore_id = var.datastore
+    datastore_id = each.value.datastore
 
     dns {
       servers = var.network.dns_servers
