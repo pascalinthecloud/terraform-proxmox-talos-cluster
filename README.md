@@ -51,16 +51,16 @@ module "k8s_cluster" {
 
 | Name | Version |
 |------|---------|
-| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | 0.69.0 |
-| <a name="provider_talos"></a> [talos](#provider\_talos) | 0.7.0 |
+| <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | >= 0.69.0, < 1.0.0 |
+| <a name="provider_talos"></a> [talos](#provider\_talos) | >= 0.7.0, < 1.0.0 |
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.2 |
-| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | 0.69.0 |
-| <a name="requirement_talos"></a> [talos](#requirement\_talos) | 0.7.0 |
+| <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.69.0, < 1.0.0 |
+| <a name="requirement_talos"></a> [talos](#requirement\_talos) | >= 0.7.0, < 1.0.0 |
 
 ## Inputs
 
