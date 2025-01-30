@@ -2,10 +2,11 @@ module "k8s_cluster" {
   source       = "../modules/k8s_cluster"
   
   cluster = {
+    name = "homelab.cluster"
     vm_base_id   = 700
-    cluster_name = "homelab.cluster"
     datastore    = "local-lvm"
     node         = "pve01"
+    config_patches = [file("${path.module}/config_patch.yaml")]
   }
  
   image = {
@@ -35,6 +36,61 @@ module "k8s_cluster" {
       cpu    = 2
       memory = 6192
       disk   = 50
+    }
+  }
+}
+
+# Override example 
+module "k8s_cluster_override" {
+  source       = "../modules/k8s_cluster"
+  
+  cluster = {
+    name = "homelab.cluster"
+    vm_base_id   = 700
+    datastore    = "local-lvm"
+    node         = "pve01"
+    config_patches = [file("${path.module}/config_patch.yaml")]
+  }
+ 
+  image = {
+    version    = "v1.9.1"
+    extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
+  }
+
+  network = {
+    cidr        = "10.10.100.0/24"
+    gateway     = "10.10.100.1"
+    dns_servers = ["10.0.10.1", "1.1.1.1"]
+    vlan_id     = 1100
+  }
+
+  controlplane = {
+    count = 1
+    specs = {
+      cpu    = 2
+      memory = 4096
+      disk   = 50
+    }
+  }
+
+  worker = {
+    count = 2
+    specs = {
+      cpu    = 2
+      memory = 6192
+      disk   = 50
+    }
+  }
+  overrides = {
+    "controlplane-1" = {
+      node = "pve01"
+      network = {
+        cidr        = "10.10.101.0/24"
+        ip_address  = "10.10.101.150"
+        gateway     = "10.10.101.1"
+        dns_servers = ["10.0.10.1", "1.1.1.1"]
+        vlan_id     = 1101
+      }
     }
   }
 }
