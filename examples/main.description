@@ -1,2 +1,4 @@
 # terraform-proxmox-talos-cluster
-Terraform module to provision a Kubernetes cluster on Proxmox using Talos Linux. Automates node creation, Talos configuration, and integration with Proxmox, providing a secure and lightweight environment for homelabs or production use. Ideal for streamlined Kubernetes setup and management.
+A Terraform module for provisioning a Kubernetes cluster on Proxmox using Talos Linux. This module automates node creation, Talos configuration, and Proxmox integration, offering a secure, lightweight, and efficient environment for homelabs or production use. It simplifies the Kubernetes setup and management process.
+
+Feel free to contact me, open an issue, or contribute to the project. Your feedback and contributions are always welcome! 🤓
