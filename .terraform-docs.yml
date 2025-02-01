@@ -28,5 +28,8 @@ content: |-
 
   {{ .Outputs }}
 
+  ## Repo Activity
+  ![Alt](https://repobeats.axiom.co/api/embed/d5c6fd467a9febbf9bea34fbcd6eb31174975075.svg "Repobeats analytics image")
+
 output:
   file: "README.md"
