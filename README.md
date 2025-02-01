@@ -138,5 +138,6 @@ module "k8s_cluster_override" {
 | <a name="output_talos_cluster_health"></a> [talos\_cluster\_health](#output\_talos\_cluster\_health) | Health status of the Talos cluster, can be used for other ressources to depend on |
 | <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | Talos configuration file for the cluster |
 
+## Repo Activity
 ![Alt](https://repobeats.axiom.co/api/embed/d5c6fd467a9febbf9bea34fbcd6eb31174975075.svg "Repobeats analytics image")
 <!-- END_TF_DOCS -->
