@@ -1,7 +1,7 @@
 output "talosconfig" {
   description = "Talos configuration file for the cluster"
-  value     = data.talos_client_configuration.this.talos_config
-  sensitive = true
+  value       = data.talos_client_configuration.this.talos_config
+  sensitive   = true
 }
 
 output "kubeconfig" {
@@ -18,5 +18,5 @@ output "kubeconfig" {
 
 output "talos_cluster_health" {
   description = "Health status of the Talos cluster, can be used for other ressources to depend on"
-  value = data.talos_cluster_health.this
+  value       = data.talos_cluster_health.this
 }
