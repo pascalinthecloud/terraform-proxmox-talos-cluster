@@ -3,7 +3,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
 
   node_name = each.value.node
   name      = each.key
-  description = templatefile("${path.module}/templates/description.tmpl", {
+  description = templatefile("${path.module}/templates/description.tftpl", {
     cluster_name = var.cluster.name,
     node_name    = each.key
     subnet       = "${each.value.ip_address}/${each.value.subnet}"
