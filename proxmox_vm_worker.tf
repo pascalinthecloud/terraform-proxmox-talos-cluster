@@ -1,9 +1,18 @@
 resource "proxmox_virtual_environment_vm" "worker" {
   for_each = local.workers
 
-  node_name     = each.value.node
-  name          = each.key
-  description   = "worker"
+  node_name = each.value.node
+  name      = each.key
+  description = templatefile("${path.module}/templates/description.tmpl", {
+    cluster_name = var.cluster.name,
+    node_name    = each.key
+    subnet       = "${each.value.ip_address}/${each.value.subnet}"
+    gateway      = var.network.gateway
+    cpu          = each.value.cpu
+    memory       = each.value.memory
+    disk         = each.value.disk
+    proxmox_node = each.value.node
+  })
   vm_id         = each.value.vm_id
   machine       = "q35"
   scsi_hardware = "virtio-scsi-single"
