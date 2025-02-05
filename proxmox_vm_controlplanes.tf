@@ -13,6 +13,7 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     disk         = each.value.disk
     proxmox_node = each.value.node
   })
+  tags = [${var.cluster.name}]
   vm_id         = each.value.vm_id
   machine       = "q35"
   scsi_hardware = "virtio-scsi-single"
