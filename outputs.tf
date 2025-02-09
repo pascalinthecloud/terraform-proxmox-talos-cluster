@@ -20,3 +20,8 @@ output "talos_cluster_health" {
   description = "Health status of the Talos cluster, can be used for other ressources to depend on"
   value       = data.talos_cluster_health.this
 }
+
+output "talos_image_schematic_id" {
+  description = "ID of the Talos image schematic"
+  value       = talos_image_factory_schematic.this.id
+}
