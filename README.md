@@ -136,6 +136,7 @@ module "k8s_cluster_override" {
 |------|-------------|
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | Kubernetes kubeconfig for the cluster |
 | <a name="output_talos_cluster_health"></a> [talos\_cluster\_health](#output\_talos\_cluster\_health) | Health status of the Talos cluster, can be used for other ressources to depend on |
+| <a name="output_talos_image_schematic_id"></a> [talos\_image\_schematic\_id](#output\_talos\_image\_schematic\_id) | ID of the Talos image schematic |
 | <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | Talos configuration file for the cluster |
 
 ## Repo Activity
