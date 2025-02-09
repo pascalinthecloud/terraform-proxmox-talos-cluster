@@ -28,14 +28,15 @@ env:
   BUILD_PATH: "." # default value when not using subfolders
   # BUILD_PATH: subfolder
 
-defaults:
-  run:
-    working-directory: docs
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest´
+    defaults:
+      run:
+        working-directory: docs
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
