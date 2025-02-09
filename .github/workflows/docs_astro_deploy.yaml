@@ -25,8 +25,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  BUILD_PATH: "docs" # default value when not using subfolders
+  BUILD_PATH: "." # default value when not using subfolders
   # BUILD_PATH: subfolder
+
+defaults:
+  run:
+    working-directory: docs
 
 jobs:
   build:
@@ -35,8 +39,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: docs
       - name: Detect package manager
         id: detect-package-manager
         run: |
