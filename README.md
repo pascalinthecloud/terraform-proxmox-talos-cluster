@@ -4,6 +4,19 @@ A Terraform module for provisioning a Kubernetes cluster on Proxmox using Talos 
 
 Feel free to contact me, open an issue, or contribute to the project. Your feedback and contributions are always welcome! 🤓
 
+## Geting kubeconfig & talosconfig
+```bash
+terraform output --raw kubeconfig > cluster.kubeconfig
+terraform output --raw talosconfig > cluster.talosconfig
+```
+
+## Upgrading Talos cluster
+First we need get the schematic id from the outputs and use that for upgrading the cluster in order to keep the extensions. 
+```bash
+talosctl upgrade --image factory.talos.dev/installer/<SCHEMATIC_ID>:v1.9.3 --preserve
+```
+The preserve option is only needed when wanting to keep files/directories on Talos nodes (for example when using Longhorn/Rook...)
+
 ## Example
 
 ```hcl
