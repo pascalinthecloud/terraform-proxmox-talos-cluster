@@ -92,4 +92,9 @@ module "talos_cluster" {
   }
 }
 ```
+After running terraform apply, the cluster is ready for use. Simply retrieve the kubeconfig for Kubernetes access and the talosconfig for managing Talos nodes.
 
+```bash
+terraform output --raw kubeconfig > cluster.kubeconfig
+terraform output --raw talosconfig > cluster.talosconfig
+```
