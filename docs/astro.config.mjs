@@ -15,8 +15,8 @@ export default defineConfig({
 					label: 'Guides',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'Upgrade talos', slug: 'guides/upgrade_talos' },
 						{ label: 'Setup talos cluster', slug: 'guides/setup' },
+						{ label: 'Upgrade talos', slug: 'guides/upgrade_talos' },
 					],
 				},
 				{
