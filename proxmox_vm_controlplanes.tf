@@ -33,7 +33,7 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
   }
 
   network_device {
-    bridge  = "vmbr0"
+    bridge  = var.network.bridge
     vlan_id = var.network.vlan_id
   }
 

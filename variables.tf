@@ -55,6 +55,7 @@ variable "image" {
 variable "network" {
   description = "Network configuration for nodes"
   type = object({
+    bridge     = optional(string, "vmbr0") # The bridge to use for the network interface
     cidr        = string
     gateway     = string
     dns_servers = list(string)
