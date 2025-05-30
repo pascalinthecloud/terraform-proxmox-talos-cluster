@@ -2,7 +2,7 @@ variable "cluster" {
   description = "Cluster configuration"
   type = object({
     name           = string                       # The name of the cluster
-    config_patches = list(string)                 # List of configuration patches to apply to the Talos machine configuration
+    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration
     node           = string                       # Default node to deploy the vms on
     datastore      = string                       # Default datastore to deploy the vms on
     vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
@@ -55,7 +55,7 @@ variable "image" {
 variable "network" {
   description = "Network configuration for nodes"
   type = object({
-    bridge     = optional(string, "vmbr0") # The bridge to use for the network interface
+    bridge      = optional(string, "vmbr0") # The bridge to use for the network interface
     cidr        = string
     gateway     = string
     dns_servers = list(string)
