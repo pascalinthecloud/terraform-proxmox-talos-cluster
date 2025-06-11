@@ -13,7 +13,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
     disk         = each.value.disk
     proxmox_node = each.value.node
   })
-  tags = [var.cluster.name]
+  tags          = [var.cluster.name]
   vm_id         = each.value.vm_id
   machine       = "q35"
   scsi_hardware = "virtio-scsi-single"
@@ -33,7 +33,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
   }
 
   network_device {
-    bridge  = "vmbr0"
+    bridge  = var.network.bridge
     vlan_id = var.network.vlan_id
   }
 
