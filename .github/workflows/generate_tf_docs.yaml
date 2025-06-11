@@ -14,15 +14,15 @@ jobs:
   docs:
     name: Generate Terraform Docs
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout base repo (safe)
+      - name: Checkout PR branch safely
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.WRITE_PAT }}
 
-      - name: Generate terraform docs (from base only)
+      - name: Generate terraform docs and push to PR branch
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
