@@ -1,18 +1,28 @@
-name: Generate terraform docs
+name: Generate Terraform Docs
+
 on:
   pull_request_target:
     branches: [main]
     types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  statuses: write
+
 jobs:
   docs:
+    name: Generate Terraform Docs
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.WRITE_PAT }}
-          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Render terraform docs inside the README.md and push changes back to PR branch
+    steps:
+      - name: Checkout base repo (safe)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          token: ${{ secrets.WRITE_PAT }}
+
+      - name: Generate terraform docs (from base only)
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: .
