@@ -43,7 +43,7 @@ module "k8s_cluster" {
 
 # Override example 
 module "k8s_cluster_override" {
-  source       = "../modules/k8s_cluster"
+  source       = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
   
   cluster = {
     name = "homelab.cluster"
