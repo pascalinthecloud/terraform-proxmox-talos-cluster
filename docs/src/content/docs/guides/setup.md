@@ -5,7 +5,7 @@ description: A guide for setting up talos cluster with this module.
 
 ```terraform
 module "talos_cluster" {
-  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=main"
+  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
   cluster = {
     vm_base_id     = 700
     name           = "cluster-prod"
