@@ -11,7 +11,7 @@ module "k8s_cluster" {
   }
 
   image = {
-    version    = "v1.9.1"
+    version    = "v1.10.4"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
@@ -76,7 +76,8 @@ module "k8s_cluster_override" {
     }
     overrides = {
       "controlplane-1" = {
-        node = "pve01"
+        node  = "pve01"
+        vm_id = 720
         network = {
           cidr        = "10.10.101.0/24"
           ip_address  = "10.10.101.150"
