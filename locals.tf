@@ -86,7 +86,7 @@ locals {
       hostname = format("%s-worker-%02d", var.cluster.name, i + 1)
 
       vm_id = coalesce(try(var.worker.overrides[format("worker-%s", i + 1)].vm_base_id, null),
-      var.cluster.vm_base_id + 10 + var.controlplane.count)
+      var.cluster.vm_base_id + 10)
 
       node = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].node, null),
