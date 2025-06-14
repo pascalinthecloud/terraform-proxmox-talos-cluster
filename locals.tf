@@ -19,7 +19,9 @@ locals {
   controlplanes = {
     for i in range(var.controlplane.count) : format("controlplane-%s", i + 1) => {
       hostname = format("%s-controlplane-%02d", var.cluster.name, i + 1)
-      vm_id    = var.cluster.vm_base_id + i
+
+      vm_id = coalesce(try(var.controlplane.overrides[format("controlplane-%s", i + 1)].vm_base_id, null),
+      var.cluster.vm_base_id + i)
 
       node = coalesce(
         try(var.controlplane.overrides[format("controlplane-%s", i + 1)].node, null),
@@ -35,10 +37,10 @@ locals {
       # Otherwise, calculate the IP address based on the network CIDR and the node index.
       # The `coalesce` function returns the first non-null value from the provided arguments.
       # The `try` function attempts to extract the IP address from the override; if it fails, it returns null.
-      # The `cidrhost` function calculates the IP address based on the network CIDR and the node index.b
+      # The `cidrhost` function calculates the IP address based on the network CIDR, the node index, and the base offset.
       ip_address = coalesce(
         try(var.controlplane.overrides[format("controlplane-%s", i + 1)].network.ip_address, null),
-        cidrhost(var.network.cidr, i + 10)
+        cidrhost(var.network.cidr, i + var.cluster.ip_base_offset)
       )
 
       # Determine the subnet mask for the control plane node.
@@ -82,7 +84,9 @@ locals {
   workers = {
     for i in range(var.worker.count) : format("worker-%s", i + 1) => {
       hostname = format("%s-worker-%02d", var.cluster.name, i + 1)
-      vm_id    = var.cluster.vm_base_id + var.controlplane.count + i
+
+      vm_id = coalesce(try(var.worker.overrides[format("worker-%s", i + 1)].vm_base_id, null),
+      var.cluster.vm_base_id + 10 + var.controlplane.count)
 
       node = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].node, null),
@@ -96,7 +100,7 @@ locals {
 
       ip_address = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].network.ip_address, null),
-        cidrhost(var.network.cidr, i + 10 + var.controlplane.count)
+        cidrhost(var.network.cidr, i + var.cluster.ip_base_offset + var.worker.specs.ip_offset)
       )
 
       subnet = coalesce(
