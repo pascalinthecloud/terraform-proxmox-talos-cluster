@@ -20,7 +20,7 @@ locals {
     for i in range(var.controlplane.count) : format("controlplane-%s", i + 1) => {
       hostname = format("%s-controlplane-%02d", var.cluster.name, i + 1)
 
-      vm_id = coalesce(try(var.controlplane.overrides[format("controlplane-%s", i + 1)].vm_base_id, null),
+      vm_id = coalesce(try(var.controlplane.overrides[format("controlplane-%s", i + 1)].vm_id, null),
       var.cluster.vm_base_id + i)
 
       node = coalesce(
@@ -85,7 +85,7 @@ locals {
     for i in range(var.worker.count) : format("worker-%s", i + 1) => {
       hostname = format("%s-worker-%02d", var.cluster.name, i + 1)
 
-      vm_id = coalesce(try(var.worker.overrides[format("worker-%s", i + 1)].vm_base_id, null),
+      vm_id = coalesce(try(var.worker.overrides[format("worker-%s", i + 1)].vm_id, null),
       var.cluster.vm_base_id + 10)
 
       node = coalesce(

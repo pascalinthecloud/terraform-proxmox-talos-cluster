@@ -26,7 +26,7 @@ variable "controlplane" {
     })
     overrides = optional(map(object({
       datastore    = optional(string, null)
-      vm_base_id   = optional(number, null)
+      vm_id        = optional(number, null)
       node         = optional(string, null)
       cpu          = optional(number, null)
       memory       = optional(number, null)
@@ -77,7 +77,7 @@ variable "worker" {
     })
     overrides = optional(map(object({
       datastore    = optional(string, null)
-      vm_base_id   = optional(number, null)
+      vm_id        = optional(number, null)
       node         = optional(string, null)
       cpu          = optional(number, null)
       memory       = optional(number, null)
