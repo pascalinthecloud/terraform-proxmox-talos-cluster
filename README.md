@@ -21,18 +21,19 @@ The preserve option is only needed when wanting to keep files/directories on Tal
 
 ```hcl
 module "k8s_cluster" {
-  source       = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
-  
+  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
+
   cluster = {
-    name = "homelab.cluster"
-    vm_base_id   = 700
-    datastore    = "local-lvm"
-    node         = "pve01"
+    name           = "homelab.cluster"
+    vm_base_id     = 700
+    ip_base_offset = 10 # Offset for IP addresses of controlplane and worker nodes
+    datastore      = "local-lvm"
+    node           = "pve01"
     config_patches = [file("${path.module}/config_patch.yaml")]
   }
- 
+
   image = {
-    version    = "v1.9.1"
+    version    = "v1.10.4"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
@@ -56,27 +57,28 @@ module "k8s_cluster" {
   worker = {
     count = 2
     specs = {
-      cpu    = 2
-      memory = 6192
-      disk   = 50
+      ip_offset = 10 # Offset for IP addresses of worker nodes (from the controlplane IPs)
+      cpu       = 2
+      memory    = 6192
+      disk      = 50
     }
   }
 }
 
 # Override example 
 module "k8s_cluster_override" {
-  source       = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
-  
+  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.1"
+
   cluster = {
-    name = "homelab.cluster"
-    vm_base_id   = 700
-    datastore    = "local-lvm"
-    node         = "pve01"
+    name           = "homelab.cluster"
+    vm_base_id     = 700
+    datastore      = "local-lvm"
+    node           = "pve01"
     config_patches = [file("${path.module}/config_patch.yaml")]
   }
- 
+
   image = {
-    version    = "v1.9.1"
+    version    = "v1.10.4"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
@@ -94,6 +96,19 @@ module "k8s_cluster_override" {
       memory = 4096
       disk   = 50
     }
+    overrides = {
+      "controlplane-1" = {
+        node  = "pve01"
+        vm_id = 720
+        network = {
+          cidr        = "10.10.101.0/24"
+          ip_address  = "10.10.101.150"
+          gateway     = "10.10.101.1"
+          dns_servers = ["10.0.10.1", "1.1.1.1"]
+          vlan_id     = 1101
+        }
+      }
+    }
   }
 
   worker = {
@@ -103,19 +118,20 @@ module "k8s_cluster_override" {
       memory = 6192
       disk   = 50
     }
-  }
-  overrides = {
-    "controlplane-1" = {
-      node = "pve01"
-      network = {
-        cidr        = "10.10.101.0/24"
-        ip_address  = "10.10.101.150"
-        gateway     = "10.10.101.1"
-        dns_servers = ["10.0.10.1", "1.1.1.1"]
-        vlan_id     = 1101
+    overrides = {
+      "worker-1" = {
+        node = "pve01"
+        network = {
+          cidr        = "10.10.101.0/24"
+          ip_address  = "10.10.101.156"
+          gateway     = "10.10.101.1"
+          dns_servers = ["10.0.10.1", "1.1.1.1"]
+          vlan_id     = 1101
+        }
       }
     }
   }
+
 }
 ```
 
@@ -138,11 +154,11 @@ module "k8s_cluster_override" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster"></a> [cluster](#input\_cluster) | Cluster configuration | <pre>object({<br/>    name           = string                       # The name of the cluster<br/>    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration<br/>    node           = string                       # Default node to deploy the vms on<br/>    datastore      = string                       # Default datastore to deploy the vms on<br/>    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it<br/>    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on<br/>  })</pre> | n/a | yes |
-| <a name="input_controlplane"></a> [controlplane](#input\_controlplane) | Specification of controlplane nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
+| <a name="input_cluster"></a> [cluster](#input\_cluster) | Cluster configuration | <pre>object({<br/>    name           = string                       # The name of the cluster<br/>    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration<br/>    node           = string                       # Default node to deploy the vms on<br/>    datastore      = string                       # Default datastore to deploy the vms on<br/>    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it<br/>    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on<br/>    ip_base_offset = optional(number, 10)         # Offset for IP addresses of the cluster nodes<br/>  })</pre> | n/a | yes |
+| <a name="input_controlplane"></a> [controlplane](#input\_controlplane) | Specification of controlplane nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      vm_id        = optional(number, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
 | <a name="input_image"></a> [image](#input\_image) | Variable to define the image configuration for Talos machines | <pre>object({<br/>    version           = string<br/>    extensions        = list(string)<br/>    factory_url       = optional(string, "https://factory.talos.dev")<br/>    arch              = optional(string, "amd64")<br/>    platform          = optional(string, "nocloud")<br/>    proxmox_datastore = optional(string, "local")<br/>  })</pre> | n/a | yes |
 | <a name="input_network"></a> [network](#input\_network) | Network configuration for nodes | <pre>object({<br/>    bridge      = optional(string, "vmbr0") # The bridge to use for the network interface<br/>    cidr        = string<br/>    gateway     = string<br/>    dns_servers = list(string)<br/>    vlan_id     = optional(number, null)<br/>  })</pre> | n/a | yes |
-| <a name="input_worker"></a> [worker](#input\_worker) | Specification of worker nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
+| <a name="input_worker"></a> [worker](#input\_worker) | Specification of worker nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      ip_offset = optional(number, 10) # Offset for IP addresses of worker nodes<br/>      cpu       = number<br/>      memory    = number<br/>      disk      = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      vm_id        = optional(number, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
 
 ## Outputs
 
