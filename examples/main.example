@@ -56,7 +56,7 @@ module "k8s_cluster_override" {
   }
 
   image = {
-    version    = "v1.9.1"
+    version    = "v1.10.4"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
