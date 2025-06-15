@@ -1,6 +1,10 @@
 resource "proxmox_virtual_environment_vm" "controlplane" {
   for_each = local.controlplanes
 
+  lifecycle {
+    ignore_changes = [disk[0].file_id]
+  }
+
   node_name = each.value.node
   name      = each.key
   description = templatefile("${path.module}/templates/description.tftpl", {
