@@ -21,7 +21,7 @@ The preserve option is only needed when wanting to keep files/directories on Tal
 
 ```hcl
 module "k8s_cluster" {
-  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.0"
+  source = "git::https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster.git?ref=v1.0.2"
 
   cluster = {
     name           = "homelab.cluster"
