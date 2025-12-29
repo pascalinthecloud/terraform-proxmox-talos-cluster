@@ -54,7 +54,7 @@ resource "talos_machine_configuration_apply" "worker" {
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   node                        = each.value.ip_address
   config_patches = concat([
-    templatefile("${path.module}/templates/install-disk-and-hostname.yaml.tmpl", {
+    templatefile("${path.module}/templates/install-disk.yaml.tmpl", {
       hostname     = each.value.hostname
       install_disk = each.value.install_disk
     })],
