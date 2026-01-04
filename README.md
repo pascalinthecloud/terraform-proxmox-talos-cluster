@@ -33,7 +33,7 @@ module "k8s_cluster" {
   }
 
   image = {
-    version    = "v1.10.4"
+    version    = "v1.12.0"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
@@ -78,7 +78,7 @@ module "k8s_cluster_override" {
   }
 
   image = {
-    version    = "v1.10.4"
+    version    = "v1.12.0"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
 
