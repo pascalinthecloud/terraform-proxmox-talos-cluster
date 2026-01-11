@@ -10,7 +10,9 @@ module "k8s_cluster" {
     config_patches = [file("${path.module}/config_patch.yaml")]
     # ha_vip is optional and auto-generated when controlplane.count > 1
     # ha_vip = "10.10.100.50"  # Uncomment to use custom HA VIP address
+    # ha_vip_interface = "eth0" # Optional: specify interface for VIP (default: eth0)
   }
+}
 
   image = {
     version    = "v1.12.0"

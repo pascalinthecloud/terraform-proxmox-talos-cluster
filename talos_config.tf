@@ -43,8 +43,8 @@ resource "talos_machine_configuration_apply" "controlplane" {
     ],
     local.ha_vip_enabled ? [templatefile("${path.module}/templates/ha-vip.yaml.tmpl", {
       vip = local.ha_vip
-    })] : [],
-    var.cluster.config_patches
+      interface = var.cluster.ha_vip_interface
+    })] : []
   )
 }
 

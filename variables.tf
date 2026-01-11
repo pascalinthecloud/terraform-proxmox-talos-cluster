@@ -7,9 +7,11 @@ variable "cluster" {
     datastore      = string                       # Default datastore to deploy the vms on
     vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
     install_disk   = optional(string, "/dev/sda") # The disk to install Talos on
-    ip_base_offset = optional(number, 10)         # Offset for IP addresses of the cluster nodes
-    ha_vip         = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
+    ip_base_offset   = optional(number, 10)
+    ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
+    ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)
   })
+
   validation {
     condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster.name))
     error_message = "The cluster_name must only contain letters, numbers, and dashes (-)."

@@ -1,12 +1,9 @@
 machine:
   network:
     interfaces:
-      - interface: dummy0
-        addresses:
-          - ${vip}/32
-        routes: []
-        mtu: 1500
-        dhcp: false
+      - interface: ${interface}
+        vip:
+          ip: ${vip}
 cluster:
   controlPlane:
     endpoint: https://${vip}:6443
