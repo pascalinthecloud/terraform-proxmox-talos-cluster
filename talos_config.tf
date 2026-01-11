@@ -5,7 +5,7 @@ resource "talos_machine_secrets" "this" {}
 data "talos_machine_configuration" "controlplane" {
   cluster_name = var.cluster.name
 
-  cluster_endpoint = "https://${local.controlplanes[keys(local.controlplanes)[0]].ip_address}:6443"
+  cluster_endpoint = local.cluster_endpoint
   machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -14,7 +14,7 @@ data "talos_machine_configuration" "controlplane" {
 data "talos_machine_configuration" "worker" {
   cluster_name = var.cluster.name
 
-  cluster_endpoint = "https://${local.controlplanes[keys(local.controlplanes)[0]].ip_address}:6443"
+  cluster_endpoint = local.cluster_endpoint
   machine_type     = "worker"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
@@ -41,6 +41,9 @@ resource "talos_machine_configuration_apply" "controlplane" {
     }),
     file("${path.module}/templates/cp-scheduling.yaml"),
     ],
+    local.ha_vip_enabled ? [templatefile("${path.module}/templates/ha-vip.yaml.tmpl", {
+      vip = local.ha_vip
+    })] : [],
     var.cluster.config_patches
   )
 }

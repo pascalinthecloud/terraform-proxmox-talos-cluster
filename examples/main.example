@@ -8,6 +8,8 @@ module "k8s_cluster" {
     datastore      = "local-lvm"
     node           = "pve01"
     config_patches = [file("${path.module}/config_patch.yaml")]
+    # ha_vip is optional and auto-generated when controlplane.count > 1
+    # ha_vip = "10.10.100.50"  # Uncomment to use custom HA VIP address
   }
 
   image = {
@@ -53,6 +55,8 @@ module "k8s_cluster_override" {
     datastore      = "local-lvm"
     node           = "pve01"
     config_patches = [file("${path.module}/config_patch.yaml")]
+    # With 3 controlplanes, HA VIP is automatically enabled
+    # ha_vip = "10.10.101.50"  # Optional: specify custom HA VIP
   }
 
   image = {
@@ -68,7 +72,7 @@ module "k8s_cluster_override" {
   }
 
   controlplane = {
-    count = 1
+    count = 3  # Three controlplanes enable automatic HA VIP
     specs = {
       cpu    = 2
       memory = 4096

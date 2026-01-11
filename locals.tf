@@ -129,4 +129,18 @@ locals {
       )
     }
   }
+
+  # Determine if HA VIP should be enabled
+  # Automatically enable when multiple controlplanes are configured
+  ha_vip_enabled = var.controlplane.count > 1
+
+  # Use provided HA VIP or auto-generate one if HA is enabled
+  # Auto-generated VIP is the last IP address before the worker nodes start
+  ha_vip = var.controlplane.count > 1 ? coalesce(
+    var.cluster.ha_vip,
+    cidrhost(var.network.cidr, var.cluster.ip_base_offset + var.worker.specs.ip_offset - 1)
+  ) : null
+
+  # Kubernetes API endpoint for the cluster
+  cluster_endpoint = "https://${local.ha_vip_enabled ? local.ha_vip : local.controlplanes[keys(local.controlplanes)[0]].ip_address}:6443"
 }

@@ -8,6 +8,7 @@ variable "cluster" {
     vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
     install_disk   = optional(string, "/dev/sda") # The disk to install Talos on
     ip_base_offset = optional(number, 10)         # Offset for IP addresses of the cluster nodes
+    ha_vip         = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
   })
   validation {
     condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster.name))

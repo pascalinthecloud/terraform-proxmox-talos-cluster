@@ -3,6 +3,11 @@ resource "proxmox_virtual_environment_vm" "worker" {
 
   lifecycle {
     ignore_changes = [disk[0].file_id]
+
+    precondition {
+      condition     = var.controlplane.count < var.worker.specs.ip_offset
+      error_message = "The number of controlplane nodes (${var.controlplane.count}) must be less than the worker IP offset (${var.worker.specs.ip_offset}) to leave room for the HA VIP and prevent collisions."
+    }
   }
 
   node_name = each.value.node

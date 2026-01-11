@@ -25,3 +25,18 @@ output "talos_image_schematic_id" {
   description = "ID of the Talos image schematic"
   value       = talos_image_factory_schematic.this.id
 }
+
+output "ha_vip_enabled" {
+  description = "Whether HA VIP is enabled for the cluster"
+  value       = local.ha_vip_enabled
+}
+
+output "ha_vip" {
+  description = "HA VIP address for the cluster (when HA is enabled)"
+  value       = local.ha_vip
+}
+
+output "cluster_endpoint" {
+  description = "Kubernetes API endpoint for the cluster"
+  value       = local.cluster_endpoint
+}
