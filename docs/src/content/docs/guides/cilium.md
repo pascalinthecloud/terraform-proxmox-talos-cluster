@@ -14,11 +14,11 @@ When `cilium.enabled = true`, the module automatically:
    - Disables kube-proxy (`cluster.proxy.disabled: true`) — Cilium replaces it with eBPF
    - Enables kubePrism (`machine.features.kubePrism`) on port `7445` — provides a local API proxy so Cilium can reach the API server via `localhost:7445`
 
-2. Deploys Cilium via `helm_release` after the cluster health check passes
+2. Deploys Cilium via `helm_template` + `kubectl_manifest` after the cluster health check passes
 
 ## Provider Setup
 
-The module requires a configured `helm` provider to deploy Cilium. Configure it using the module's kubeconfig output:
+The module requires configured `helm` and `kubectl` providers. Configure them using the module's kubeconfig output:
 
 ```hcl
 provider "helm" {
@@ -29,7 +29,17 @@ provider "helm" {
     cluster_ca_certificate = base64decode(module.talos_cluster.kubeconfig.ca_cert)
   }
 }
+
+provider "kubectl" {
+  host                   = module.talos_cluster.kubeconfig.host
+  client_certificate     = base64decode(module.talos_cluster.kubeconfig.client_cert)
+  client_key             = base64decode(module.talos_cluster.kubeconfig.client_key)
+  cluster_ca_certificate = base64decode(module.talos_cluster.kubeconfig.ca_cert)
+  load_config_file       = false
+}
 ```
+
+The `helm` provider is used by `helm_template` to render the Cilium chart locally (no cluster access needed at plan time). The `kubectl` provider is used by `kubectl_manifest` with `apply_only = true` to apply the rendered manifests — it only connects to the cluster during `terraform apply`, after the health check passes.
 
 ## Basic Usage
 
