@@ -48,9 +48,10 @@ data "helm_template" "cilium" {
   name      = "cilium"
   namespace = "kube-system"
 
-  repository = "https://helm.cilium.io"
-  chart      = "cilium"
-  version    = var.cilium.version
+  repository   = "https://helm.cilium.io"
+  chart        = "cilium"
+  version      = var.cilium.version
+  kube_version = var.cluster.kube_version
 
   values = var.cilium.values != null ? var.cilium.values : [local.cilium_default_values]
 }

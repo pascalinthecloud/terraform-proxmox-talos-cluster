@@ -10,6 +10,7 @@ variable "cluster" {
     ip_base_offset   = optional(number, 10)
     ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
     ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)
+    kube_version     = optional(string, "1.32.0")   # Kubernetes version (used for Helm chart compatibility checks)
   })
 
   validation {
