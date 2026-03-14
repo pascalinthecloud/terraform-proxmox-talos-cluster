@@ -146,6 +146,7 @@ module "k8s_cluster_override" {
 |------|---------|
 | <a name="provider_helm"></a> [helm](#provider\_helm) | >= 2.0.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | >= 3.4.0, < 4.0.0 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 2.1.0 |
 | <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | >= 0.69.0, < 1.0.0 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | >= 0.7.0, < 1.0.0 |
 
@@ -156,6 +157,7 @@ module "k8s_cluster_override" {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.2 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.0.0 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >= 3.4.0, < 4.0.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 2.1.0 |
 | <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.69.0, < 1.0.0 |
 | <a name="requirement_talos"></a> [talos](#requirement\_talos) | >= 0.7.0, < 1.0.0 |
 
