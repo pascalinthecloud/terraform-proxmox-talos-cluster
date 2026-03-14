@@ -16,9 +16,9 @@ output "kubeconfig" {
   sensitive = true
 }
 
-output "talos_cluster_health" {
-  description = "Health status of the Talos cluster, can be used for other ressources to depend on"
-  value       = data.talos_cluster_health.this
+output "talos_health" {
+  description = "Health status of the Kubernetes API server, can be used for other resources to depend on"
+  value       = data.http.talos_health
 }
 
 output "talos_image_schematic_id" {
