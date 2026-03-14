@@ -42,9 +42,10 @@ resource "talos_machine_configuration_apply" "controlplane" {
     file("${path.module}/templates/cp-scheduling.yaml"),
     ],
     local.ha_vip_enabled ? [templatefile("${path.module}/templates/ha-vip.yaml.tmpl", {
-      vip = local.ha_vip
+      vip       = local.ha_vip
       interface = var.cluster.ha_vip_interface
     })] : [],
+    var.cilium.enabled ? [file("${path.module}/templates/cilium.yaml.tmpl")] : [],
     var.cluster.config_patches
   )
 }
@@ -62,6 +63,7 @@ resource "talos_machine_configuration_apply" "worker" {
       hostname     = each.value.hostname
       install_disk = each.value.install_disk
     })],
+    var.cilium.enabled ? [file("${path.module}/templates/cilium.yaml.tmpl")] : [],
     var.cluster.config_patches
   )
 }

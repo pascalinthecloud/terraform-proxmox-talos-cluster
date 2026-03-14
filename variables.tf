@@ -68,6 +68,16 @@ variable "network" {
   })
 }
 
+variable "cilium" {
+  description = "Cilium CNI configuration. When enabled, the module configures Talos for Cilium and deploys it via helm_template + kubectl_manifest after the cluster health check."
+  type = object({
+    enabled = optional(bool, false)
+    version = optional(string, "1.19.1") # Cilium Helm chart version
+    values  = optional(list(string))     # Custom Helm values (overrides defaults). When null, Talos-compatible defaults are used.
+  })
+  default = {}
+}
+
 variable "worker" {
   description = "Specification of worker nodes"
   type = object({

@@ -81,6 +81,8 @@ module "k8s_cluster_override" {
     config_patches = [file("${path.module}/config_patch.yaml")]
     # With 3 controlplanes, HA VIP is automatically enabled
     # ha_vip = "10.10.101.50"  # Optional: specify custom HA VIP
+    # With 3 controlplanes, HA VIP is automatically enabled
+    # ha_vip = "10.10.101.50"  # Optional: specify custom HA VIP
   }
 
   image = {
@@ -96,6 +98,7 @@ module "k8s_cluster_override" {
   }
 
   controlplane = {
+    count = 3  # Three controlplanes enable automatic HA VIP
     count = 3  # Three controlplanes enable automatic HA VIP
     specs = {
       cpu    = 2
@@ -163,10 +166,12 @@ module "k8s_cluster_override" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | Cluster configuration | <pre>object({<br/>    name           = string                       # The name of the cluster<br/>    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration<br/>    node           = string                       # Default node to deploy the vms on<br/>    datastore      = string                       # Default datastore to deploy the vms on<br/>    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it<br/>    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on<br/>    ip_base_offset   = optional(number, 10)<br/>    ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)<br/>    ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)<br/>  })</pre> | n/a | yes |
+| <a name="input_cluster"></a> [cluster](#input\_cluster) | Cluster configuration | <pre>object({<br/>    name           = string                       # The name of the cluster<br/>    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration<br/>    node           = string                       # Default node to deploy the vms on<br/>    datastore      = string                       # Default datastore to deploy the vms on<br/>    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it<br/>    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on<br/>    ip_base_offset   = optional(number, 10)<br/>    ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)<br/>    ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)<br/>  })</pre> | n/a | yes |
 | <a name="input_controlplane"></a> [controlplane](#input\_controlplane) | Specification of controlplane nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      vm_id        = optional(number, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
 | <a name="input_image"></a> [image](#input\_image) | Variable to define the image configuration for Talos machines | <pre>object({<br/>    version           = string<br/>    extensions        = list(string)<br/>    factory_url       = optional(string, "https://factory.talos.dev")<br/>    arch              = optional(string, "amd64")<br/>    platform          = optional(string, "nocloud")<br/>    proxmox_datastore = optional(string, "local")<br/>  })</pre> | n/a | yes |
 | <a name="input_network"></a> [network](#input\_network) | Network configuration for nodes | <pre>object({<br/>    bridge      = optional(string, "vmbr0") # The bridge to use for the network interface<br/>    cidr        = string<br/>    gateway     = string<br/>    dns_servers = list(string)<br/>    vlan_id     = optional(number, null)<br/>  })</pre> | n/a | yes |
 | <a name="input_worker"></a> [worker](#input\_worker) | Specification of worker nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      ip_offset = optional(number, 10) # Offset for IP addresses of worker nodes<br/>      cpu       = number<br/>      memory    = number<br/>      disk      = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      vm_id        = optional(number, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
+| <a name="input_cilium"></a> [cilium](#input\_cilium) | Cilium CNI configuration. When enabled, the module configures Talos for Cilium and deploys it via helm\_template + kubectl\_manifest after the cluster health check. | <pre>object({<br/>    enabled = optional(bool, false)<br/>    version = optional(string, "1.19.1") # Cilium Helm chart version<br/>    values  = optional(list(string))     # Custom Helm values (overrides defaults). When null, Talos-compatible defaults are used.<br/>  })</pre> | `{}` | no |
 
 ## Outputs
 
@@ -175,7 +180,11 @@ module "k8s_cluster_override" {
 | <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | Kubernetes API endpoint for the cluster |
 | <a name="output_ha_vip"></a> [ha\_vip](#output\_ha\_vip) | HA VIP address for the cluster (when HA is enabled) |
 | <a name="output_ha_vip_enabled"></a> [ha\_vip\_enabled](#output\_ha\_vip\_enabled) | Whether HA VIP is enabled for the cluster |
+| <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | Kubernetes API endpoint for the cluster |
+| <a name="output_ha_vip"></a> [ha\_vip](#output\_ha\_vip) | HA VIP address for the cluster (when HA is enabled) |
+| <a name="output_ha_vip_enabled"></a> [ha\_vip\_enabled](#output\_ha\_vip\_enabled) | Whether HA VIP is enabled for the cluster |
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | Kubernetes kubeconfig for the cluster |
+| <a name="output_talos_health"></a> [talos\_health](#output\_talos\_health) | Health status of the Kubernetes API server, can be used for other resources to depend on |
 | <a name="output_talos_health"></a> [talos\_health](#output\_talos\_health) | Health status of the Kubernetes API server, can be used for other resources to depend on |
 | <a name="output_talos_image_schematic_id"></a> [talos\_image\_schematic\_id](#output\_talos\_image\_schematic\_id) | ID of the Talos image schematic |
 | <a name="output_talosconfig"></a> [talosconfig](#output\_talosconfig) | Talos configuration file for the cluster |
