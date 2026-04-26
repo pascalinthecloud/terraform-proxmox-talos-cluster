@@ -39,10 +39,18 @@ resource "talos_machine_configuration_apply" "controlplane" {
       hostname     = each.value.hostname
       install_disk = each.value.install_disk
     }),
+    templatefile("${path.module}/templates/network-config.yaml.tmpl", {
+      hostname    = each.key
+      ip_address  = each.value.ip_address
+      subnet      = each.value.subnet
+      gateway     = var.network.gateway
+      dns_servers = var.network.dns_servers
+      interface   = var.cluster.ha_vip_interface
+    }),
     file("${path.module}/templates/cp-scheduling.yaml"),
     ],
     local.ha_vip_enabled ? [templatefile("${path.module}/templates/ha-vip.yaml.tmpl", {
-      vip = local.ha_vip
+      vip       = local.ha_vip
       interface = var.cluster.ha_vip_interface
     })] : [],
     var.cluster.config_patches
@@ -61,6 +69,14 @@ resource "talos_machine_configuration_apply" "worker" {
     templatefile("${path.module}/templates/install-disk.yaml.tmpl", {
       hostname     = each.value.hostname
       install_disk = each.value.install_disk
+    }),
+    templatefile("${path.module}/templates/network-config.yaml.tmpl", {
+      hostname    = each.key
+      ip_address  = each.value.ip_address
+      subnet      = each.value.subnet
+      gateway     = var.network.gateway
+      dns_servers = var.network.dns_servers
+      interface   = var.cluster.ha_vip_interface
     })],
     var.cluster.config_patches
   )

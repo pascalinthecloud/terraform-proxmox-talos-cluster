@@ -1,0 +1,19 @@
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: ${hostname}
+---
+machine:
+  network:
+    nameservers:
+%{ for dns in dns_servers ~}
+      - ${dns}
+%{ endfor ~}
+    interfaces:
+      - interface: ${interface}
+        dhcp: false
+        addresses:
+          - ${ip_address}/${subnet}
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${gateway}
