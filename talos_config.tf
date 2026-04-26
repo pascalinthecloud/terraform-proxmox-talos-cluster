@@ -40,7 +40,6 @@ resource "talos_machine_configuration_apply" "controlplane" {
       install_disk = each.value.install_disk
     }),
     templatefile("${path.module}/templates/network-config.yaml.tmpl", {
-      hostname    = each.key
       ip_address  = each.value.ip_address
       subnet      = each.value.subnet
       gateway     = var.network.gateway
@@ -71,7 +70,6 @@ resource "talos_machine_configuration_apply" "worker" {
       install_disk = each.value.install_disk
     }),
     templatefile("${path.module}/templates/network-config.yaml.tmpl", {
-      hostname    = each.key
       ip_address  = each.value.ip_address
       subnet      = each.value.subnet
       gateway     = var.network.gateway
