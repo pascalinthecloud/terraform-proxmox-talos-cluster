@@ -53,6 +53,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
       vip       = local.ha_vip
       interface = var.cluster.ha_vip_interface
     })] : [],
+    var.cilium.enabled ? [file("${path.module}/templates/cilium.yaml.tmpl")] : [],
     var.cluster.config_patches
   )
 }
@@ -78,6 +79,7 @@ resource "talos_machine_configuration_apply" "worker" {
       dns_servers = var.network.dns_servers
       interface   = var.cluster.ha_vip_interface
     })],
+    var.cilium.enabled ? [file("${path.module}/templates/cilium.yaml.tmpl")] : [],
     var.cluster.config_patches
   )
 }

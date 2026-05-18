@@ -10,6 +10,7 @@ variable "cluster" {
     ip_base_offset   = optional(number, 10)
     ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
     ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)
+    kube_version     = optional(string, "1.32.0")   # Kubernetes version (used for Helm chart compatibility checks)
   })
 
   validation {
@@ -66,6 +67,16 @@ variable "network" {
     dns_servers = list(string)
     vlan_id     = optional(number, null)
   })
+}
+
+variable "cilium" {
+  description = "Cilium CNI configuration. When enabled, the module configures Talos for Cilium and deploys it via helm_template + kubectl_manifest after the cluster health check."
+  type = object({
+    enabled = optional(bool, false)
+    version = optional(string, "1.19.1") # Cilium Helm chart version
+    values  = optional(list(string))     # Custom Helm values (overrides defaults). When null, Talos-compatible defaults are used.
+  })
+  default = {}
 }
 
 variable "worker" {

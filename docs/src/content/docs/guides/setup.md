@@ -14,7 +14,7 @@ module "talos_cluster" {
     config_patches = [file("${path.module}/config_patch.yaml")]
   }
   image = {
-    version    = "v1.9.3"
+    version    = "v1.12.5"
     extensions = ["qemu-guest-agent", "iscsi-tools", "util-linux-tools"]
   }
   network = {

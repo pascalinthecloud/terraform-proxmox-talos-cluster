@@ -18,6 +18,8 @@ export default defineConfig({
 						{ label: 'Provider configuration', slug: 'guides/provider_configuration' },
 						{ label: 'Setup talos cluster', slug: 'guides/setup' },
 						{ label: 'HA VIP Configuration', slug: 'guides/ha_vip' },
+						{ label: 'Cilium CNI', slug: 'guides/cilium' },
+						{ label: 'IPv6 Dual-Stack', slug: 'guides/dual_stack_ipv6' },
 						{ label: 'Upgrade talos', slug: 'guides/upgrade_talos' },
 					],
 				},
