@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
   })
   tags          = [var.cluster.name]
   vm_id         = each.value.vm_id
-  machine       = "q35"
+  machine       = each.value.machine
   scsi_hardware = "virtio-scsi-single"
   bios          = "seabios"
 

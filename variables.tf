@@ -1,15 +1,16 @@
 variable "cluster" {
   description = "Cluster configuration"
   type = object({
-    name           = string                       # The name of the cluster
-    config_patches = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration
-    node           = string                       # Default node to deploy the vms on
-    datastore      = string                       # Default datastore to deploy the vms on
-    vm_base_id     = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
-    install_disk   = optional(string, "/dev/sda") # The disk to install Talos on
+    name             = string                       # The name of the cluster
+    config_patches   = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration
+    node             = string                       # Default node to deploy the vms on
+    datastore        = string                       # Default datastore to deploy the vms on
+    vm_base_id       = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
+    install_disk     = optional(string, "/dev/sda") # The disk to install Talos on
+    machine          = optional(string, "q35")      # QEMU machine type, e.g. "pc-q35-10.1" to pin
     ip_base_offset   = optional(number, 10)
-    ha_vip           = optional(string, null)       # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
-    ha_vip_interface = optional(string, "eth0")     # Network interface to bind the HA VIP to (defaults to eth0)
+    ha_vip           = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
+    ha_vip_interface = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
   })
 
   validation {
@@ -35,6 +36,7 @@ variable "controlplane" {
       memory       = optional(number, null)
       disk         = optional(number, null)
       install_disk = optional(string, null)
+      machine      = optional(string, null)
       network = optional(object({
         ip_address = string
         cidr       = string
@@ -86,6 +88,7 @@ variable "worker" {
       memory       = optional(number, null)
       disk         = optional(number, null)
       install_disk = optional(string, null)
+      machine      = optional(string, null)
       network = optional(object({
         ip_address = string
         cidr       = string

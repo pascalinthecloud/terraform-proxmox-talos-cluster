@@ -78,6 +78,11 @@ locals {
         try(var.controlplane.overrides[format("controlplane-%s", i + 1)].install_disk, null),
         var.cluster.install_disk
       )
+
+      machine = coalesce(
+        try(var.controlplane.overrides[format("controlplane-%s", i + 1)].machine, null),
+        var.cluster.machine
+      )
     }
   }
 
@@ -126,6 +131,11 @@ locals {
       install_disk = coalesce(
         try(var.worker.overrides[format("worker-%s", i + 1)].install_disk, null),
         var.cluster.install_disk
+      )
+
+      machine = coalesce(
+        try(var.worker.overrides[format("worker-%s", i + 1)].machine, null),
+        var.cluster.machine
       )
     }
   }
