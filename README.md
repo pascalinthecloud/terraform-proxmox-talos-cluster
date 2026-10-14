@@ -144,7 +144,7 @@ module "k8s_cluster_override" {
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_http"></a> [http](#provider\_http) | >= 3.4.0, < 4.0.0 |
 | <a name="provider_proxmox"></a> [proxmox](#provider\_proxmox) | >= 0.69.0, < 1.0.0 |
 | <a name="provider_talos"></a> [talos](#provider\_talos) | >= 0.7.0, < 1.0.0 |
@@ -152,7 +152,7 @@ module "k8s_cluster_override" {
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.2 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >= 3.4.0, < 4.0.0 |
 | <a name="requirement_proxmox"></a> [proxmox](#requirement\_proxmox) | >= 0.69.0, < 1.0.0 |
@@ -161,7 +161,7 @@ module "k8s_cluster_override" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_cluster"></a> [cluster](#input\_cluster) | Cluster configuration | <pre>object({<br/>    name                = string                           # The name of the cluster<br/>    config_patches      = optional(list(string), [])       # List of configuration patches to apply to the Talos machine configuration<br/>    node                = string                           # Default node to deploy the vms on<br/>    datastore           = string                           # Default datastore to deploy the vms on<br/>    vm_base_id          = number                           # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it<br/>    install_disk        = optional(string, "/dev/sda")     # The disk to install Talos on<br/>    machine             = optional(string, "q35")          # QEMU machine type, e.g. "pc-q35-10.1" to pin<br/>    disk_cache          = optional(string, "writethrough") # QEMU disk cache mode of the Talos disk ("none" avoids double caching in the host page cache)<br/>    reboot_after_update = optional(bool, true)             # Let the provider reboot VMs to apply changes that need a cold start; false = changes stay pending until you restart the VM<br/>    ip_base_offset      = optional(number, 10)<br/>    ha_vip              = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)<br/>    ha_vip_interface    = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)<br/>  })</pre> | n/a | yes |
 | <a name="input_controlplane"></a> [controlplane](#input\_controlplane) | Specification of controlplane nodes | <pre>object({<br/>    count = number<br/>    specs = object({<br/>      cpu    = number<br/>      memory = number<br/>      disk   = number<br/>    })<br/>    overrides = optional(map(object({<br/>      datastore    = optional(string, null)<br/>      vm_id        = optional(number, null)<br/>      node         = optional(string, null)<br/>      cpu          = optional(number, null)<br/>      memory       = optional(number, null)<br/>      disk         = optional(number, null)<br/>      install_disk = optional(string, null)<br/>      machine      = optional(string, null)<br/>      network = optional(object({<br/>        ip_address = string<br/>        cidr       = string<br/>        gateway    = string<br/>        vlan_id    = optional(number, null)<br/>      }), null)<br/>    })), {})<br/>  })</pre> | n/a | yes |
 | <a name="input_image"></a> [image](#input\_image) | Variable to define the image configuration for Talos machines | <pre>object({<br/>    version           = string<br/>    extensions        = list(string)<br/>    factory_url       = optional(string, "https://factory.talos.dev")<br/>    arch              = optional(string, "amd64")<br/>    platform          = optional(string, "nocloud")<br/>    proxmox_datastore = optional(string, "local")<br/>  })</pre> | n/a | yes |
@@ -171,7 +171,7 @@ module "k8s_cluster_override" {
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_cluster_endpoint"></a> [cluster\_endpoint](#output\_cluster\_endpoint) | Kubernetes API endpoint for the cluster |
 | <a name="output_ha_vip"></a> [ha\_vip](#output\_ha\_vip) | HA VIP address for the cluster (when HA is enabled) |
 | <a name="output_ha_vip_enabled"></a> [ha\_vip\_enabled](#output\_ha\_vip\_enabled) | Whether HA VIP is enabled for the cluster |
