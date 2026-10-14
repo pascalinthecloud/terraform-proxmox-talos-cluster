@@ -1,21 +1,28 @@
 variable "cluster" {
   description = "Cluster configuration"
   type = object({
-    name             = string                       # The name of the cluster
-    config_patches   = optional(list(string), [])   # List of configuration patches to apply to the Talos machine configuration
-    node             = string                       # Default node to deploy the vms on
-    datastore        = string                       # Default datastore to deploy the vms on
-    vm_base_id       = number                       # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
-    install_disk     = optional(string, "/dev/sda") # The disk to install Talos on
-    machine          = optional(string, "q35")      # QEMU machine type, e.g. "pc-q35-10.1" to pin
-    ip_base_offset   = optional(number, 10)
-    ha_vip           = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
-    ha_vip_interface = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
+    name                = string                           # The name of the cluster
+    config_patches      = optional(list(string), [])       # List of configuration patches to apply to the Talos machine configuration
+    node                = string                           # Default node to deploy the vms on
+    datastore           = string                           # Default datastore to deploy the vms on
+    vm_base_id          = number                           # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
+    install_disk        = optional(string, "/dev/sda")     # The disk to install Talos on
+    machine             = optional(string, "q35")          # QEMU machine type, e.g. "pc-q35-10.1" to pin
+    disk_cache          = optional(string, "writethrough") # QEMU disk cache mode of the Talos disk ("none" avoids double caching in the host page cache)
+    reboot_after_update = optional(bool, true)             # Let the provider reboot VMs to apply changes that need a cold start; false = changes stay pending until you restart the VM
+    ip_base_offset      = optional(number, 10)
+    ha_vip              = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
+    ha_vip_interface    = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
   })
 
   validation {
     condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster.name))
     error_message = "The cluster_name must only contain letters, numbers, and dashes (-)."
+  }
+
+  validation {
+    condition     = contains(["none", "writethrough", "writeback", "unsafe", "directsync"], var.cluster.disk_cache)
+    error_message = "cluster.disk_cache must be one of: none, writethrough, writeback, unsafe, directsync."
   }
 }
 
