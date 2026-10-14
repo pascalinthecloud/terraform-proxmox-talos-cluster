@@ -17,11 +17,12 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     disk         = each.value.disk
     proxmox_node = each.value.node
   })
-  tags          = [var.cluster.name]
-  vm_id         = each.value.vm_id
-  machine       = each.value.machine
-  scsi_hardware = "virtio-scsi-single"
-  bios          = "seabios"
+  tags                = [var.cluster.name]
+  vm_id               = each.value.vm_id
+  machine             = each.value.machine
+  reboot_after_update = var.cluster.reboot_after_update
+  scsi_hardware       = "virtio-scsi-single"
+  bios                = "seabios"
 
   agent {
     enabled = true
@@ -45,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
     datastore_id = each.value.datastore
     interface    = "scsi0"
     iothread     = true
-    cache        = "writethrough"
+    cache        = var.cluster.disk_cache
     discard      = "on"
     ssd          = true
     file_format  = "raw"
