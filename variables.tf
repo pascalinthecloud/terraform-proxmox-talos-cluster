@@ -10,6 +10,7 @@ variable "cluster" {
     machine             = optional(string, "q35")          # QEMU machine type, e.g. "pc-q35-10.1" to pin
     disk_cache          = optional(string, "writethrough") # QEMU disk cache mode of the Talos disk ("none" avoids double caching in the host page cache)
     reboot_after_update = optional(bool, true)             # Let the provider reboot VMs to apply changes that need a cold start; false = changes stay pending until you restart the VM
+    config_contract     = optional(string, null)           # Talos config contract for the generated machine configs, e.g. "v1.12"; null = the talos provider's own version. Pin it on existing clusters so a provider upgrade doesn't switch to the new config documents
     ip_base_offset      = optional(number, 10)
     ha_vip              = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
     ha_vip_interface    = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
@@ -18,6 +19,11 @@ variable "cluster" {
   validation {
     condition     = can(regex("^[a-zA-Z0-9-]+$", var.cluster.name))
     error_message = "The cluster_name must only contain letters, numbers, and dashes (-)."
+  }
+
+  validation {
+    condition     = var.cluster.config_contract == null || can(regex("^v1\\.[0-9]+$", var.cluster.config_contract))
+    error_message = "cluster.config_contract must be a Talos minor version like \"v1.12\"."
   }
 
   validation {
