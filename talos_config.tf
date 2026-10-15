@@ -8,6 +8,7 @@ data "talos_machine_configuration" "controlplane" {
   cluster_endpoint = local.cluster_endpoint
   machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
+  talos_version    = var.cluster.config_contract
 }
 
 # Talos machine configuration for worker nodes
@@ -17,6 +18,7 @@ data "talos_machine_configuration" "worker" {
   cluster_endpoint = local.cluster_endpoint
   machine_type     = "worker"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
+  talos_version    = var.cluster.config_contract
 }
 
 # Talos client configuration for the Kubernetes cluster
