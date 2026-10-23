@@ -2,7 +2,12 @@ resource "proxmox_virtual_environment_vm" "controlplane" {
   for_each = local.controlplanes
 
   lifecycle {
-    ignore_changes = [disk[0].file_id]
+    # initialization: the cloud-init drive (ide2) only seeds the first boot;
+    # Talos takes its network (addresses, routes, nameservers) from the machine
+    # config, which talos_machine_configuration_apply updates live. Proxmox
+    # can't swap the drive on a running VM ("ide2: hotplug problem - unable to
+    # change media type"), so changes here would only fail the apply.
+    ignore_changes = [disk[0].file_id, initialization]
   }
 
   node_name = each.value.node
