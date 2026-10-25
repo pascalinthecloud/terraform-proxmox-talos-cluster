@@ -1,31 +1,49 @@
 name: Generate Terraform Docs
 
+# pull_request, not pull_request_target: a PR from a fork must never run with
+# this repo's secrets or a write token. Fork PRs get the read-only check; PRs
+# from branches of this repo get the docs regenerated and pushed.
 on:
-  pull_request_target:
+  pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, edited]
 
 permissions:
-  contents: write
-  pull-requests: write
-  statuses: write
+  contents: read
 
 jobs:
   docs:
     name: Generate Terraform Docs
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout PR branch safely
-        uses: actions/checkout@v4
+      # WRITE_PAT instead of GITHUB_TOKEN so the docs commit triggers CI again
+      # (pushes made with GITHUB_TOKEN don't), keeping the required tflint check.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.head_ref }}
           token: ${{ secrets.WRITE_PAT }}
 
       - name: Generate terraform docs and push to PR branch
-        uses: terraform-docs/gh-actions@v1.3.0
+        uses: terraform-docs/gh-actions@6de6da0cefcc6b4b7a5cbea4d79d97060733093c # v1.4.1
         with:
           working-dir: .
           output-file: README.md
           output-method: replace
           git-push: "true"
+
+  docs-check:
+    name: Check Terraform Docs (fork PR)
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Fail if README.md is out of date
+        uses: terraform-docs/gh-actions@6de6da0cefcc6b4b7a5cbea4d79d97060733093c # v1.4.1
+        with:
+          working-dir: .
+          output-file: README.md
+          output-method: replace
+          fail-on-diff: "true"
