@@ -7,9 +7,9 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'terraform-proxmox-talos-cluster',
-			social: {
-				github: 'https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster',
-			},
+			social: [
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/pascalinthecloud/terraform-proxmox-talos-cluster' },
+			],
 			sidebar: [
 				{
 					label: 'Guides',
@@ -23,7 +23,7 @@ export default defineConfig({
 				},
 				{
 					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					items: [{ autogenerate: { directory: 'reference' } }],
 				},
 			],
 		}),
