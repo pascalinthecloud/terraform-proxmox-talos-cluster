@@ -1,19 +1,20 @@
 variable "cluster" {
   description = "Cluster configuration"
   type = object({
-    name                = string                           # The name of the cluster
-    config_patches      = optional(list(string), [])       # List of configuration patches to apply to the Talos machine configuration
-    node                = string                           # Default node to deploy the vms on
-    datastore           = string                           # Default datastore to deploy the vms on
-    vm_base_id          = number                           # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
-    install_disk        = optional(string, "/dev/sda")     # The disk to install Talos on
-    machine             = optional(string, "q35")          # QEMU machine type, e.g. "pc-q35-10.1" to pin
-    disk_cache          = optional(string, "writethrough") # QEMU disk cache mode of the Talos disk ("none" avoids double caching in the host page cache)
-    reboot_after_update = optional(bool, true)             # Let the provider reboot VMs to apply changes that need a cold start; false = changes stay pending until you restart the VM
-    config_contract     = optional(string, null)           # Talos config contract for the generated machine configs, e.g. "v1.12"; null = the talos provider's own version. Pin it on existing clusters so a provider upgrade doesn't switch to the new config documents
-    ip_base_offset      = optional(number, 10)
-    ha_vip              = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
-    ha_vip_interface    = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
+    name                        = string                           # The name of the cluster
+    config_patches              = optional(list(string), [])       # List of configuration patches to apply to the Talos machine configuration
+    controlplane_config_patches = optional(list(string), [])       # Patches for the controlplane nodes only, applied after config_patches (e.g. machine.features.kubernetesTalosAPIAccess, which Talos accepts on controlplane nodes only)
+    node                        = string                           # Default node to deploy the vms on
+    datastore                   = string                           # Default datastore to deploy the vms on
+    vm_base_id                  = number                           # The first VM ID for Proxmox VMs, with subsequent IDs counted up from it
+    install_disk                = optional(string, "/dev/sda")     # The disk to install Talos on
+    machine                     = optional(string, "q35")          # QEMU machine type, e.g. "pc-q35-10.1" to pin
+    disk_cache                  = optional(string, "writethrough") # QEMU disk cache mode of the Talos disk ("none" avoids double caching in the host page cache)
+    reboot_after_update         = optional(bool, true)             # Let the provider reboot VMs to apply changes that need a cold start; false = changes stay pending until you restart the VM
+    config_contract             = optional(string, null)           # Talos config contract for the generated machine configs, e.g. "v1.12"; null = the talos provider's own version. Pin it on existing clusters so a provider upgrade doesn't switch to the new config documents
+    ip_base_offset              = optional(number, 10)
+    ha_vip                      = optional(string, null)   # HA VIP address for the cluster (automatically enabled when multiple controlplanes are configured)
+    ha_vip_interface            = optional(string, "eth0") # Network interface to bind the HA VIP to (defaults to eth0)
   })
 
   validation {

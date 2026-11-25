@@ -55,7 +55,8 @@ resource "talos_machine_configuration_apply" "controlplane" {
       vip       = local.ha_vip
       interface = var.cluster.ha_vip_interface
     })] : [],
-    var.cluster.config_patches
+    var.cluster.config_patches,
+    var.cluster.controlplane_config_patches
   )
 }
 
